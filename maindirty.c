@@ -13,8 +13,8 @@
 #define L 75
 #define R 77
 
-int lengthSnake;
-int bend_numbers;
+int lenght;
+int bend;
 int len;
 char key;
 int life;
@@ -35,7 +35,7 @@ int main(){
     printInitScreen();
     loadScreen();
 
-    lengthSnake=5;
+    lenght=5;
     headSnake.x=25;
     headSnake.y=20;
     headSnake.direction=R;
@@ -61,7 +61,7 @@ void toMove(){
         for(count=0;count<30;count++){
             bodySnake[count].x=0;
             bodySnake[count].y=0;
-            if(count==lengthSnake) break;
+            if(count==lenght) break;
         }
 
         toDelay();
@@ -86,8 +86,8 @@ void toMove(){
     (key==U&&headSnake.direction!=D&&headSnake.direction!=U)||
     (key==D&&headSnake.direction!=U&&headSnake.direction!=D)){
 
-        bend_numbers++;
-        bend[bend_numbers]=headSnake;
+        bend++;
+        bend[bend]=headSnake;
         headSnake.direction=key;
 
         //It moves the snack
@@ -143,9 +143,9 @@ void toDelay(){
 }
 void toCheckExitGameCondition(){
     int count,check=0;
-    for(count=4;count<lengthSnake;count++){   //starts with 4 because it needs minimum 4 element to touch its own bodySnake
+    for(count=4;count<lenght;count++){   //starts with 4 because it needs minimum 4 element to touch its own bodySnake
         if(bodySnake[0].x==bodySnake[count].x&&bodySnake[0].y==bodySnake[count].y) check++;
-        if(count==lengthSnake||check!=0) break;
+        if(count==lenght||check!=0) break;
     }
     if(headSnake.x<=10||headSnake.x>=70||headSnake.y<=10||headSnake.y>=30||check!=0){
         life--;
@@ -153,7 +153,7 @@ void toCheckExitGameCondition(){
         if(life>=0){
             headSnake.x=25;
             headSnake.y=20;
-            bend_numbers=0;
+            bend=0;
             headSnake.direction=R;
             toMove();
         }
@@ -168,7 +168,7 @@ void toCheckExitGameCondition(){
 void eatFood()
 {
     if(headSnake.x==food.x&&headSnake.y==food.y){ //it generates food in random places when the snake eats
-        lengthSnake++;
+        lenght++;
         srand(time(0));
 
         food.x=rand()%70;
@@ -189,7 +189,7 @@ void eatFood()
 void Down(){
     int count;
 
-    for(count=0;count<=(headSnake.y-bend[bend_numbers].y)&&len<lengthSnake;count++)
+    for(count=0;count<=(headSnake.y-bend[bend].y)&&len<lenght;count++)
     {
         GotoXY(headSnake.x,headSnake.y-count);
         if(len==0) printf("v");
@@ -205,7 +205,7 @@ void Down(){
 void Left(){
     int count;
 
-    for(count=0;count<=(bend[bend_numbers].x-headSnake.x)&&len<lengthSnake;count++){
+    for(count=0;count<=(bend[bend].x-headSnake.x)&&len<lenght;count++){
         GotoXY((headSnake.x+count),headSnake.y);
         if(len==0) printf("<");
         else printf("*");
@@ -220,7 +220,7 @@ void Left(){
 void Right(){
     int count;
 
-    for(count=0;count<=(headSnake.x-bend[bend_numbers].x)&&len<lengthSnake;count++){
+    for(count=0;count<=(headSnake.x-bend[bend].x)&&len<lenght;count++){
         bodySnake[len].x=headSnake.x-count;
         bodySnake[len].y=headSnake.y;
         GotoXY(bodySnake[len].x,bodySnake[len].y);
@@ -234,7 +234,7 @@ void Right(){
 void Up(){
    int count;
 
-   for(count=0;count<=(bend[bend_numbers].y-headSnake.y)&&len<lengthSnake;count++){
+   for(count=0;count<=(bend[bend].y-headSnake.y)&&len<lenght;count++){
         GotoXY(headSnake.x,headSnake.y+count);
         if(len==0) printf("^");
         else printf("*");
@@ -249,7 +249,7 @@ void Up(){
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 void Bend(){
     int i,j,difference;
-    for(i=bend_numbers;i>=0&&len<lengthSnake;i--){
+    for(i=bend;i>=0&&len<lenght;i--){
         if(bend[i].x==bend[i-1].x){
             difference=bend[i].y-bend[i-1].y;
             if(difference<0)
@@ -259,7 +259,7 @@ void Bend(){
                     GotoXY(bodySnake[len].x,bodySnake[len].y);
                     printf("*");
                     len++;
-                    if(len==lengthSnake) break;
+                    if(len==lenght) break;
                 }
             else if(difference>0)
                 for(j=1;j<=difference;j++){
@@ -268,28 +268,28 @@ void Bend(){
                     GotoXY(bodySnake[len].x,bodySnake[len].y);
                     printf("*");
                     len++;
-                    if(len==lengthSnake) break;
+                    if(len==lenght) break;
                 }
             }
             else if(bend[i].y==bend[i-1].y){
                 difference=bend[i].x-bend[i-1].x;
                 if(difference<0)
-                    for(j=1;j<=(-difference)&&len<lengthSnake;j++){
+                    for(j=1;j<=(-difference)&&len<lenght;j++){
                         bodySnake[len].x=bend[i].x+j;
                         bodySnake[len].y=bend[i].y;
                         GotoXY(bodySnake[len].x,bodySnake[len].y);
                         printf("*");
                         len++;
-                        if(len==lengthSnake) break;
+                        if(len==lenght) break;
                     }
                 else if(difference>0)
-                    for(j=1;j<=difference&&len<lengthSnake;j++){
+                    for(j=1;j<=difference&&len<lenght;j++){
                         bodySnake[len].x=bend[i].x-j;
                         bodySnake[len].y=bend[i].y;
                         GotoXY(bodySnake[len].x,bodySnake[len].y);
                         printf("*");
                         len++;
-                        if(len==lengthSnake) break;
+                        if(len==lenght) break;
                     }
              }
    }
@@ -323,7 +323,7 @@ void printInitScreen(){
    getch();
    system("cls");
    printf("\tGame instructions:\n");
-   printf("\n-> Use arrow keys to move the snake.\n\n-> You will be provided foods at the several coordinates of the screen which you have to eat. Everytime you eat a food the lengthSnake of the snake will be increased by 1 element and thus the score.\n\n-> Here you are provided with three lives. Your life will decrease as you hit the wall or snake's bodySnake.\n\n-> YOu can pause the game in its middle by pressing any key. To continue the paused game press any other key once again\n\n-> If you want to exit press esc. \n");
+   printf("\n-> Use arrow keys to move the snake.\n\n-> You will be provided foods at the several coordinates of the screen which you have to eat. Everytime you eat a food the lenght of the snake will be increased by 1 element and thus the score.\n\n-> Here you are provided with three lives. Your life will decrease as you hit the wall or snake's bodySnake.\n\n-> YOu can pause the game in its middle by pressing any key. To continue the paused game press any other key once again\n\n-> If you want to exit press esc. \n");
    printf("\n\nPress any key to play game...");
    if(getch()==27) exit(0);
    system("cls");
@@ -397,7 +397,7 @@ void statusBar(){
 }
 int returnScore(){
     int score;
-    score = lengthSnake-5;
+    score = lenght-5;
 
     return score;
 }
