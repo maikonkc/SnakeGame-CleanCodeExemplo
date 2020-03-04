@@ -8,15 +8,15 @@
 #include <windows.h>
 #include <process.h>
 
-#define U 72
-#define D 80
-#define L 75
-#define R 77
+#define U 72 //up
+#define D 80 //down
+#define L 75 //left
+#define R 77 //right
 
 int lenght;
 int bend;
 int len;
-char k;
+char key;
 int life;
 
 struct coordinate{
@@ -30,76 +30,76 @@ typedef struct coordinate coordinate;
 coordinate head, bend[500],food,body[30];
 
 int main(){
-    char k;
+    char key;
 
-    printInitScreen();
-    loadScreen();
+    Screen();
+    load();
 
     lenght=5;
     head.x=25;
     head.y=20;
     head.direction=R;
 
-    printBoarder();
-    eatFood();
+    Boarder();
+    Food();
 
     life=3;
     bend[0]=head;
 
-    toMove();
+    Move();
 
     return 0;
 }
-void toMove(){
-    int k,z;
+void Move(){
+    int key,count;
 
     do{
-        eatFood();
+        Food();
         fflush(stdin); // clean buffer
         len=0;
 
-        for(z=0;z<30;z++){
-            body[z].x=0;
-            body[z].y=0;
-            if(z==lenght) break;
+        for(count=0;count<30;count++){
+            body[count].x=0;
+            body[count].y=0;
+            if(count==lenght) break;
         }
 
         toDelay();
-        printBoarder();
+        Boarder();
 
         if(head.direction==R) Right();
         else if(head.direction==L) Left();
         else if(head.direction==D) Down();
         else if(head.direction==U) Up();
         toCheckExitGameCondition();
-    }while(!kbhit()); // kbhit => verify if a k have been pressed.
+    }while(!kbhit()); // kbhit => verify if a key have been pressed.
 
-    k=getch();
-    if(k==27){
+    key=getch();
+    if(key==27){
         system("cls");
         exit(0);
     }
     // bend increment
     if(
-    (k==R&&head.direction!=L&&head.direction!=R)||
-    (k==L&&head.direction!=R&&head.direction!=L)||
-    (k==U&&head.direction!=D&&head.direction!=U)||
-    (k==D&&head.direction!=U&&head.direction!=D)){
+    (key==R&&head.direction!=L&&head.direction!=R)||
+    (key==L&&head.direction!=R&&head.direction!=L)||
+    (key==U&&head.direction!=D&&head.direction!=U)||
+    (key==D&&head.direction!=U&&head.direction!=D)){
 
         bend++;
         bend[bend]=head;
-        head.direction=k;
+        head.direction=key;
 
         //It moves the snack
-        if(k==U) head.y--;
-        if(k==D) head.y++;
-        if(k==R) head.x++;
-        if(k==L) head.x--;
+        if(key==U) head.y--;
+        if(key==D) head.y++;
+        if(key==R) head.x++;
+        if(key==L) head.x--;
 
-        toMove();
+        Move();
     }else{
         printf("\a");
-        toMove();
+        Move();
     }
 }
 
@@ -121,15 +121,15 @@ void GotoXY(int x, int y)
     a = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleCursorPosition(a,b);
  }
-void loadScreen(){
-	int load;
+void load(){
+	int loadComponent;
 
     gotoxy(36,14);
     printf("loading...");
 
     gotoxy(30,15);
 
-    for (load = 1; load <= 20; load++){
+    for (loadComponent = 1; loadComponent <= 20; loadComponent++){
         sleep(2/3);
         printf("%c",177);
     }
@@ -138,14 +138,14 @@ void loadScreen(){
 }
 void toDelay(){
     statusBar();
-    long double z;
-    for(z=0;z<=(10000000);z++); //sleep very fast but not so much
+    long double count;
+    for(count=0;count<=(10000000);count++); //sleep very fast but not so much
 }
 void toCheckExitGameCondition(){
-    int z,check=0;
-    for(z=4;z<lenght;z++){   //starts with 4 because it needs minimum 4 element to touch its own body
-        if(body[0].x==body[z].x&&body[0].y==body[z].y) check++;
-        if(z==lenght||check!=0) break;
+    int count,check=0;
+    for(count=4;count<lenght;count++){   //starts with 4 because it needs minimum 4 element to touch its own body
+        if(body[0].x==body[count].x&&body[0].y==body[count].y) check++;
+        if(count==lenght||check!=0) break;
     }
     if(head.x<=10||head.x>=70||head.y<=10||head.y>=30||check!=0){
         life--;
@@ -155,17 +155,17 @@ void toCheckExitGameCondition(){
             head.y=20;
             bend=0;
             head.direction=R;
-            toMove();
+            Move();
         }
         else{
             system("cls");
-            printf("All lives completed\nBetter Luck Next Time!!!\nPress any k to quit the game\n");
+            printf("All lives completed\nBetter Luck Next Time!!!\nPress any key to quit the game\n");
             record();
             exit(0);
         }
     }
 }
-void eatFood()
+void Food()
 {
     if(head.x==food.x&&head.y==food.y){ //it generates food in random places when the snake eats
         lenght++;
@@ -187,30 +187,30 @@ void eatFood()
 
 // directions commands /////////////////////////////////////////////////////////////////////////////
 void Down(){
-    int z;
+    int count;
 
-    for(z=0;z<=(head.y-bend[bend].y)&&len<lenght;z++)
+    for(count=0;count<=(head.y-bend[bend].y)&&len<lenght;count++)
     {
-        GotoXY(head.x,head.y-z);
+        GotoXY(head.x,head.y-count);
         if(len==0) printf("v");
         else printf("*");
 
         body[len].x=head.x;
-        body[len].y=head.y-z;
+        body[len].y=head.y-count;
         len++;
     }
     Bend();
     if(!kbhit()) head.y++;
 }
 void Left(){
-    int z;
+    int count;
 
-    for(z=0;z<=(bend[bend].x-head.x)&&len<lenght;z++){
-        GotoXY((head.x+z),head.y);
+    for(count=0;count<=(bend[bend].x-head.x)&&len<lenght;count++){
+        GotoXY((head.x+count),head.y);
         if(len==0) printf("<");
         else printf("*");
 
-        body[len].x=head.x+z;
+        body[len].x=head.x+count;
         body[len].y=head.y;
         len++;
     }
@@ -218,10 +218,10 @@ void Left(){
     if(!kbhit()) head.x--;
 }
 void Right(){
-    int z;
+    int count;
 
-    for(z=0;z<=(head.x-bend[bend].x)&&len<lenght;z++){
-        body[len].x=head.x-z;
+    for(count=0;count<=(head.x-bend[bend].x)&&len<lenght;count++){
+        body[len].x=head.x-count;
         body[len].y=head.y;
         GotoXY(body[len].x,body[len].y);
         if(len==0) printf(">");
@@ -232,15 +232,15 @@ void Right(){
     if(!kbhit()) head.x++;
 }
 void Up(){
-   int z;
+   int count;
 
-   for(z=0;z<=(bend[bend].y-head.y)&&len<lenght;z++){
-        GotoXY(head.x,head.y+z);
+   for(count=0;count<=(bend[bend].y-head.y)&&len<lenght;count++){
+        GotoXY(head.x,head.y+count);
         if(len==0) printf("^");
         else printf("*");
 
         body[len].x=head.x;
-        body[len].y=head.y+z;
+        body[len].y=head.y+count;
         len++;
    }
    Bend();
@@ -248,12 +248,12 @@ void Up(){
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 void Bend(){
-    int i,j,d;
+    int i,j,difference;
     for(i=bend;i>=0&&len<lenght;i--){
         if(bend[i].x==bend[i-1].x){
-            d=bend[i].y-bend[i-1].y;
-            if(d<0)
-                for(j=1;j<=(-d);j++){
+            difference=bend[i].y-bend[i-1].y;
+            if(difference<0)
+                for(j=1;j<=(-difference);j++){
                     body[len].x=bend[i].x;
                     body[len].y=bend[i].y+j;
                     GotoXY(body[len].x,body[len].y);
@@ -261,8 +261,8 @@ void Bend(){
                     len++;
                     if(len==lenght) break;
                 }
-            else if(d>0)
-                for(j=1;j<=d;j++){
+            else if(difference>0)
+                for(j=1;j<=difference;j++){
                     body[len].x=bend[i].x;
                     body[len].y=bend[i].y-j;
                     GotoXY(body[len].x,body[len].y);
@@ -272,9 +272,9 @@ void Bend(){
                 }
             }
             else if(bend[i].y==bend[i-1].y){
-                d=bend[i].x-bend[i-1].x;
-                if(d<0)
-                    for(j=1;j<=(-d)&&len<lenght;j++){
+                difference=bend[i].x-bend[i-1].x;
+                if(difference<0)
+                    for(j=1;j<=(-difference)&&len<lenght;j++){
                         body[len].x=bend[i].x+j;
                         body[len].y=bend[i].y;
                         GotoXY(body[len].x,body[len].y);
@@ -282,8 +282,8 @@ void Bend(){
                         len++;
                         if(len==lenght) break;
                     }
-                else if(d>0)
-                    for(j=1;j<=d&&len<lenght;j++){
+                else if(difference>0)
+                    for(j=1;j<=difference&&len<lenght;j++){
                         body[len].x=bend[i].x-j;
                         body[len].y=bend[i].y;
                         GotoXY(body[len].x,body[len].y);
@@ -294,7 +294,7 @@ void Bend(){
              }
    }
 }
-void printBoarder(){
+void Boarder(){
     system("cls");
     int i;
 
@@ -318,76 +318,76 @@ void printBoarder(){
     }
 
 }
-void printInitScreen(){
-   printf("\tWelcome to the mini Snake game.(press any k to continue)\n");
+void Screen(){
+   printf("\tWelcome to the mini Snake game.(press any key to continue)\n");
    getch();
    system("cls");
    printf("\tGame instructions:\n");
-   printf("\n-> Use arrow keys to move the snake.\n\n-> You will be provided foods at the several coordinates of the screen which you have to eat. Everytime you eat a food the lenght of the snake will be increased by 1 element and thus the pts.\n\n-> Here you are provided with three lives. Your life will decrease as you hit the wall or snake's body.\n\n-> YOu can pause the game in its middle by pressing any k. To continue the paused game press any other k once again\n\n-> If you want to exit press esc. \n");
-   printf("\n\nPress any k to play game...");
+   printf("\n-> Use arrow keys to move the snake.\n\n-> You will be provided foods at the several coordinates of the screen which you have to eat. Everytime you eat a food the lenght of the snake will be increased by 1 element and thus the score.\n\n-> Here you are provided with three lives. Your life will decrease as you hit the wall or snake's body.\n\n-> YOu can pause the game in its middle by pressing any key. To continue the paused game press any other key once again\n\n-> If you want to exit press esc. \n");
+   printf("\n\nPress any key to play game...");
    if(getch()==27) exit(0);
    system("cls");
 }
 void record(){
-    char precord,rec;
+    char printPastRecords,records;
 
     getPlayerName();
     addScoreTimeToFile();
 
-    printf("wanna see past rec press 'y'\n");
-    precord=getch();
+    printf("wanna see past records press 'y'\n");
+    printPastRecords=getch();
     system("cls");
-    if(precord=='y') printRecords();
+    if(printPastRecords=='y') printRecords();
 }
 void addScoreTimeToFile(){
-    FILE *inf;
+    FILE *info;
     time_t mytime;
 
     mytime = time(NULL);
-    inf=fopen("record.txt","a+");
-    fprintf(inf,"Played Date:%s",ctime(&mytime));
-    fprintf(inf,"Score:%d\n", Scoreonly());
-    fclose(inf);
+    info=fopen("record.txt","a+");
+    fprintf(info,"Played Date:%s",ctime(&mytime));
+    fprintf(info,"Score:%d\n", Scoreonly());
+    fclose(info);
 }
-char toTurnFirstLetterCapital(char pname[20]){
-    char mxname[20];
-    int z;
-    FILE *inf;
+char toTurnFirstLetterCapital(char playerName[20]){
+    char capitalName[20];
+    int count;
+    FILE *info;
 
     //to convert the first letter after space to capital
-    for(z=0;pname[z]!='\0';z++){ 
-    mxname[0]=toupper(pname[0]);
-    if(pname[z-1]==' '){
-    mxname[z]=toupper(pname[z]);
-    mxname[z-1]=pname[z-1];}
-    else mxname[z]=pname[z];
+    for(count=0;playerName[count]!='\0';count++){ 
+    capitalName[0]=toupper(playerName[0]);
+    if(playerName[count-1]==' '){
+    capitalName[count]=toupper(playerName[count]);
+    capitalName[count-1]=playerName[count-1];}
+    else capitalName[count]=playerName[count];
     }
-    mxname[z]='\0';
+    capitalName[count]='\0';
 
-    inf=fopen("record.txt","a+");
-    fprintf(inf,"Player Name :%s\n",mxname);
-    fclose(inf);
+    info=fopen("record.txt","a+");
+    fprintf(info,"Player Name :%s\n",capitalName);
+    fclose(info);
 
 }
 void getPlayerName(){
-    char pname[20];
+    char playerName[20];
 
     getch();
     system("cls");
     printf("Enter your name\n");
-    scanf("%[^\n]",pname);
+    scanf("%[^\n]",playerName);
 
-    toTurnFirstLetterCapital(pname);
+    toTurnFirstLetterCapital(playerName);
 }
 void printRecords(){
-    FILE *inf; 
-    char rec;
+    FILE *info; 
+    char records;
 
-    inf=fopen("record.txt","r");
+    info=fopen("record.txt","r");
     do{
-        putchar(rec=getc(inf));
-    }while(rec!=EOF);
-    fclose(inf);
+        putchar(records=getc(info));
+    }while(records!=EOF);
+    fclose(info);
 }
 void statusBar(){
     GotoXY(20,8);
@@ -396,14 +396,14 @@ void statusBar(){
     printf("Life : %d",life);
 }
 int returnScore(){
-    int pts;
-    pts = lenght-5;
+    int score;
+    score = lenght-5;
 
-    return pts;
+    return score;
 }
 
 int Scoreonly(){
-int pts=returnScore();
+int score=returnScore();
 system("cls");
-return pts;
+return score;
 }
