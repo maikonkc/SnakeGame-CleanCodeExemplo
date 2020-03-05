@@ -90,7 +90,7 @@ void Move(){
         bend[bend]=head;
         head.direction=key;
 
-        //It moves the snack
+        //It makes the snake stop
         if(key==U) head.y--;
         if(key==D) head.y++;
         if(key==R) head.x++;
@@ -320,11 +320,16 @@ void Boarder(){
 }
 void Screen(){
    printf("\tWelcome to the mini Snake game.(press any key to continue)\n");
+   //It says to screeen: Welcome to the mini Snake Game.(Press any key to continue)
    getch();
    system("cls");
+   //It Clears to screen
    printf("\tGame instructions:\n");
+   //It says: Game Instructions
    printf("\n-> Use arrow keys to move the snake.\n\n-> You will be provided foods at the several coordinates of the screen which you have to eat. Everytime you eat a food the lenght of the snake will be increased by 1 element and thus the score.\n\n-> Here you are provided with three lives. Your life will decrease as you hit the wall or snake's body.\n\n-> YOu can pause the game in its middle by pressing any key. To continue the paused game press any other key once again\n\n-> If you want to exit press esc. \n");
+   //It says -> Use arrow keys to move the snake. -> You will be provided foods at the several coordinates of the screen which you have to eat. Everytime you eat a food the lenght of the snake will be increased by 1 element and thus the score.\n\n-> Here you are provided with three lives. Your life will decrease as you hit the wall or snake's body.\n\n-> YOu can pause the game in its middle by pressing any key. To continue the paused game press any other key once again\n\n-> If you want to exit press esc.
    printf("\n\nPress any key to play game...");
+   //It says Press any key to play game...
    if(getch()==27) exit(0);
    system("cls");
 }
@@ -345,8 +350,11 @@ void addScoreTimeToFile(){
 
     mytime = time(NULL);
     info=fopen("record.txt","a+");
+    //It opens the file to update
     fprintf(info,"Played Date:%s",ctime(&mytime));
+    //It shows the date when you played the game
     fprintf(info,"Score:%d\n", Scoreonly());
+    //It shows the Score's player
     fclose(info);
 }
 char toTurnFirstLetterCapital(char playerName[20]){
@@ -370,6 +378,7 @@ char toTurnFirstLetterCapital(char playerName[20]){
 
 }
 void getPlayerName(){
+    //This function gets the player's name
     char playerName[20];
 
     getch();
@@ -380,6 +389,7 @@ void getPlayerName(){
     toTurnFirstLetterCapital(playerName);
 }
 void printRecords(){
+    //This function prints the record
     FILE *info; 
     char records;
 
@@ -390,12 +400,14 @@ void printRecords(){
     fclose(info);
 }
 void statusBar(){
+    //This Function shows the status bar
     GotoXY(20,8);
     printf("SCORE : %d",returnScore());
     GotoXY(50,8);
     printf("Life : %d",life);
 }
 int returnScore(){
+    //This Function returns the Score
     int score;
     score = lenght-5;
 
