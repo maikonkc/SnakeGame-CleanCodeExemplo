@@ -30,71 +30,71 @@ typedef struct coordinate coordinate;
 coordinate head, bend[500],food,body[30];
 
 int main(){
-    char key;
+      char key;
 
-    Screen();
+        Screen();
     load();
 
-    lenght=5;
-    head.x=25;
-    head.y=20;
-    head.direction=R;
+     lenght=5;
+      head.x=25;
+     head.y=20;
+         head.direction=R;
 
-    Boarder();
+     Boarder();
     Food();
 
     life=3;
-    bend[0]=head;
+       bend[0]=head;
 
-    Move();
+     Move();
 
-    return 0;
+return 0;
 }
 void Move(){
     int key,count;
 
     do{
         Food();
-        fflush(stdin); 
+            fflush(stdin); 
         len=0;
 
-        for(count=0;count<30;count++){
+            for(count=0;count<30;count++){
             body[count].x=0;
             body[count].y=0;
             if(count==lenght) break;
-        }
+}
 
-        toDelay();
+            toDelay();
         Boarder();
 
         if(head.direction==R) Right();
-        else if(head.direction==L) Left();
-        else if(head.direction==D) Down();
+            else if(head.direction==L) Left();
+            else if(head.direction==D) Down();
         else if(head.direction==U) Up();
         toCheckExitGameCondition();
-    }while(!kbhit()); 
+        }while(!kbhit()); 
 
-    key=getch();
-    if(key==27){
+        key=getch();
+        if(key==27){
         system("cls");
         exit(0);
-    }
+        }
     // bend increment
     if(
     (key==R&&head.direction!=L&&head.direction!=R)||
-    (key==L&&head.direction!=R&&head.direction!=L)||
+        (key==L&&head.direction!=R&&head.direction!=L)||
     (key==U&&head.direction!=D&&head.direction!=U)||
-    (key==D&&head.direction!=U&&head.direction!=D)){
+        (key==D&&head.direction!=U&&head.direction!=D)){
 
         bend++;
-        bend[bend]=head;
+    bend[bend]=head;
         head.direction=key;
 
         //It makes the snake stop
         if(key==U) head.y--;
-        if(key==D) head.y++;
-        if(key==R) head.x++;
-        if(key==L) head.x--;
+            if(key==D) head.y++;
+                if(key==R) head.x++;
+                    if(key==L) head.x--;
 
         Move();
     }else{
@@ -104,45 +104,46 @@ void Move(){
 }
 
 void gotoxy(int x, int y){
- COORD coord;
+COORD coord;
 
- coord.X = x;
- coord.Y = y;
+    coord.X = x;
+coord.Y = y;
 
  SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 void GotoXY(int x, int y)
 {
     HANDLE a;
-    COORD b;
-    fflush(stdout);
-    b.X = x;
+        COORD b;
+      fflush(stdout);
+     b.X = x;
     b.Y = y;
-    a = GetStdHandle(STD_OUTPUT_HANDLE);
+  a = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleCursorPosition(a,b);
  }
 void load(){
-	int loadComponent;
+int loadComponent;
 
-    gotoxy(36,14);
+      gotoxy(36,14);
     printf("loading...");
 
-    gotoxy(30,15);
+gotoxy(30,15);
 
-    for (loadComponent = 1; loadComponent <= 20; loadComponent++){
-        sleep(2/3);
+        for (loadComponent = 1; loadComponent <= 20; loadComponent++){
+sleep(2/3);
         printf("%c",177);
-    }
+}
 
     getch();
 }
+
 void toDelay(){
-    statusBar();
+statusBar();
     long double count;
-    for(count=0;count<=(10000000);count++); //sleep very fast but not so much
+      for(count=0;count<=(10000000);count++); //sleep very fast but not so much
 }
 void toCheckExitGameCondition(){
-    int count,check=0;
+        int count,check=0;
     for(count=4;count<lenght;count++){   //starts with 4 because it needs minimum 4 element to touch its own body
         if(body[0].x==body[count].x&&body[0].y==body[count].y) check++;
         if(count==lenght||check!=0) break;
@@ -150,21 +151,21 @@ void toCheckExitGameCondition(){
     if(head.x<=10||head.x>=70||head.y<=10||head.y>=30||check!=0){
         life--;
 
-        if(life>=0){
-            head.x=25;
-            head.y=20;
-            bend=0;
-            head.direction=R;
-            Move();
-        }
+if(life>=0){
+                head.x=25;
+                head.y=20;
+                bend=0;
+                head.direction=R;
+                Move();
+                    }
         else{
-            system("cls");
-            printf("All lives completed\nBetter Luck Next Time!!!\nPress any key to quit the game\n");
-            record();
-            exit(0);
-        }
-    }
+        system("cls");
+        printf("All lives completed\nBetter Luck Next Time!!!\nPress any key to quit the game\n");
+        record();
+        exit(0);
 }
+      }
+  }
 void Food()
 {
     if(head.x==food.x&&head.y==food.y){ //it generates food in random places when the snake eats
