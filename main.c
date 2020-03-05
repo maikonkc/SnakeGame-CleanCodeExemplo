@@ -346,7 +346,7 @@ void addScoreTimeToFile(){
     mytime = time(NULL);
     info=fopen("record.txt","a+");
     fprintf(info,"Played Date:%s",ctime(&mytime));
-    fprintf(info,"Score:%d\n", Scoreonly());
+    fprintf(info,"Score:%d\n", scoreOnly());
     fclose(info);
 }
 char toTurnFirstLetterCapital(char playerName[20]){
@@ -402,7 +402,7 @@ int returnScore(){
     return score;
 }
 
-int Scoreonly(){
+int scoreOnly(){
 int score=returnScore();
 system("cls");
 return score;
