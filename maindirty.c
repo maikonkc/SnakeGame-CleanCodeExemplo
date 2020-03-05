@@ -8,16 +8,16 @@
 #include <windows.h>
 #include <process.h>
 
-#define U 72 //up
-#define D 80 //down
-#define L 75 //left
-#define R 77 //right
+#define U 72 //down
+#define D 80 //up
+#define L 75 //right
+#define R 77 //left
 
-int lenght;
-int bend;
-int len;
-char key;
-int life;
+int lenght; //length
+int bend;   //bend
+int len;    //len
+char key;   //key
+int life;   //life
 
 struct coordinate{
     int x;
@@ -55,7 +55,7 @@ void Move(){
 
     do{
         Food();
-        fflush(stdin); // clean buffer
+        fflush(stdin); 
         len=0;
 
         for(count=0;count<30;count++){
@@ -72,7 +72,7 @@ void Move(){
         else if(head.direction==D) Down();
         else if(head.direction==U) Up();
         toCheckExitGameCondition();
-    }while(!kbhit()); // kbhit => verify if a key have been pressed.
+    }while(!kbhit()); 
 
     key=getch();
     if(key==27){
