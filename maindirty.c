@@ -14,7 +14,7 @@
 #define R 77 //left
 
 int lenght; //length
-int bend;   //bend
+int bend_n;   //bend
 int len;    //len
 char key;   //key
 int life;   //life
@@ -86,8 +86,8 @@ void Move(){
     (key==U&&head.direction!=D&&head.direction!=U)||
         (key==D&&head.direction!=U&&head.direction!=D)){
 
-        bend++;
-    bend[bend]=head;
+        bend_n++;
+    bend[bend_n]=head;
         head.direction=key;
 
         //It makes the snake stop
@@ -154,7 +154,7 @@ void toCheckExitGameCondition(){
 if(life>=0){
                 head.x=25;
                 head.y=20;
-                bend=0;
+                bend_n=0;
                 head.direction=R;
                 Move();
                     }
@@ -190,7 +190,7 @@ void Food()
 void Down(){
     int count;
 
-    for(count=0;count<=(head.y-bend[bend].y)&&len<lenght;count++)
+    for(count=0;count<=(head.y-bend[bend_n].y)&&len<lenght;count++)
     {
         GotoXY(head.x,head.y-count);
         if(len==0) printf("v");
@@ -206,7 +206,7 @@ void Down(){
 void Left(){
     int count;
 
-    for(count=0;count<=(bend[bend].x-head.x)&&len<lenght;count++){
+    for(count=0;count<=(bend[bend_n].x-head.x)&&len<lenght;count++){
         GotoXY((head.x+count),head.y);
         if(len==0) printf("<");
         else printf("*");
@@ -221,7 +221,7 @@ void Left(){
 void Right(){
     int count;
 
-    for(count=0;count<=(head.x-bend[bend].x)&&len<lenght;count++){
+    for(count=0;count<=(head.x-bend[bend_n].x)&&len<lenght;count++){
         body[len].x=head.x-count;
         body[len].y=head.y;
         GotoXY(body[len].x,body[len].y);
@@ -235,7 +235,7 @@ void Right(){
 void Up(){
    int count;
 
-   for(count=0;count<=(bend[bend].y-head.y)&&len<lenght;count++){
+   for(count=0;count<=(bend[bend_n].y-head.y)&&len<lenght;count++){
         GotoXY(head.x,head.y+count);
         if(len==0) printf("^");
         else printf("*");
@@ -250,7 +250,7 @@ void Up(){
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 void Bend(){
     int i,j,difference;
-    for(i=bend;i>=0&&len<lenght;i--){
+    for(i=bend_n;i>=0&&len<lenght;i--){
         if(bend[i].x==bend[i-1].x){
             difference=bend[i].y-bend[i-1].y;
             if(difference<0)
